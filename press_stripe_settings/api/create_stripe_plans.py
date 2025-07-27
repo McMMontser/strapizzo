@@ -1,10 +1,11 @@
 import frappe
 import stripe
+from press.api.billing import get_stripe
 
 @frappe.whitelist()
 def create_stripe_plans():
     doc = frappe.get_doc("Press Settings")
-    stripe.api_key = frappe.conf.get("stripe_secret_key")
+    stripe = get_stripe()
     try:
         product = stripe.Product.create(name="SaaS Subscription Plan")
         price_usd = stripe.Price.create(
